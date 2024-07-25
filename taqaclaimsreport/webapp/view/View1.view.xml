@@ -70,7 +70,7 @@
                         sticky="ColumnHeaders"
                         alternateRowColors="true"
                         noDataText="Please click 'Go' to load Data"
-                        width="290rem"
+                        width="220rem"
                         growing="true"
                         growingThreshold="20"
                         fixedLayout="false"

@@ -577,7 +577,7 @@ function (Controller, BaseController, Filter, FilterOperator, JSONModel, Fragmen
                 }));
             }
             
-
+            this.getView().getModel('showHideColumnsVisibility').refresh();
             // Log the oTableView1 for debugging purposes
             window.console.log(this.oTableView1);
             var oTableView1 = this.getView().byId("newTableId");
