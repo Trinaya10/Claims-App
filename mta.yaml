@@ -1,0 +1,92 @@
+_schema-version: "3.2"
+ID: TaqaClaimsReport
+version: 0.0.1
+modules:
+- name: TaqaClaimsReport-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: TaqaClaimsReport-repo-host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - taqaclaimsreporttaqaclaimsreport.zip
+      name: taqaclaimsreporttaqaclaimsreport
+      target-path: resources/
+- name: taqaclaimsreporttaqaclaimsreport
+  type: html5
+  path: taqaclaimsreport
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: TaqaClaimsReport-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: TaqaClaimsReport-destination-service
+    parameters:
+      content-target: true
+  - name: TaqaClaimsReport-repo-host
+    parameters:
+      service-key:
+        name: TaqaClaimsReport-repo-host-key
+  - name: uaa_TaqaClaimsReport
+    parameters:
+      service-key:
+        name: uaa_TaqaClaimsReport-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: TaqaClaimsReport_TaqaClaimsReport_repo_host
+          ServiceInstanceName: TaqaClaimsReport-html5-srv
+          ServiceKeyName: TaqaClaimsReport-repo-host-key
+          sap.cloud.service: TaqaClaimsReport
+        - Authentication: OAuth2UserTokenExchange
+          Name: TaqaClaimsReport_uaa_TaqaClaimsReport
+          ServiceInstanceName: TaqaClaimsReport-xsuaa-service
+          ServiceKeyName: uaa_TaqaClaimsReport-key
+          sap.cloud.service: TaqaClaimsReport
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+resources:
+- name: TaqaClaimsReport-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: TaqaClaimsReport-html5-srv
+    service-plan: app-host
+- name: TaqaClaimsReport-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: TaqaClaimsReport-destination-service
+    service-plan: lite
+- name: uaa_TaqaClaimsReport
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: TaqaClaimsReport-xsuaa-service
+    service-plan: application
+parameters:
+  deploy_mode: html5-repo

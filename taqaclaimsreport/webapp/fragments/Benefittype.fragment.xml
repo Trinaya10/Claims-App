@@ -1,0 +1,19 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <SelectDialog id="benefitsTypeFilterValueHelpDialog"
+                  noDataText="No Benefits Types Found"
+                  title="Select Benefits Type"
+                  confirm="onBenefitsTypeFilterValueHelpOkPress"
+                  multiSelect="true"
+                  rememberSelections="true"
+                  showClearButton="true"
+                  items="{path: 'BenefitTypes>/'}"
+                  search="onBenefitsTypeFilterSearch"
+                  cancel="onValueHelpCancelPress">
+        
+        <StandardListItem id="benefitsTypeStandardListId"
+                          title="{BenefitTypes>code}"
+                          description="{BenefitTypes>description}"
+                          type="Active" />
+        
+    </SelectDialog>
+</core:FragmentDefinition>

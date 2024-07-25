@@ -1,0 +1,277 @@
+<mvc:View controllerName="taqa.claims.report.taqaclaimsreport.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m"
+    xmlns:u="sap.ui.unified"
+    xmlns:smartFilter="sap.ui.comp.smartfilterbar"
+    xmlns:columnmenu="sap.m.table.columnmenu"
+    xmlns:smartField="sap.ui.comp.smartfield"
+    xmlns:fb="sap.ui.comp.filterbar">
+    <Page id="page" title="{i18n>title}">
+        <fb:FilterBar id="filterbar" persistencyKey="myPersKey" useToolbar="false" search="onSearch" reset="onReset">
+        <fb:filterGroupItems>
+            <fb:FilterGroupItem id="dateFilter" name="date" label="Date" groupName="Group1" visibleInFilterBar="true" >
+                <fb:control>
+                    <DateRangeSelection id="date" displayFormat="YYYY-MM-dd" width="200px" placeholder="Select Date Range" />
+                </fb:control>
+            </fb:FilterGroupItem>
+             <fb:FilterGroupItem id="employeeIdFilter" name="Employee ID" label="Employee ID" groupName="Group1" visibleInFilterBar="true">
+                 <fb:control>
+                <MultiInput id="employeeIdInput" showValueHelp="true" valueHelpRequest="onEmployeeIdValueHelp" tokenUpdate="onEmployeeIdChange"/>
+                </fb:control>
+            </fb:FilterGroupItem>
+
+            <fb:FilterGroupItem id="companyCodeFilter" name="Company Code" label="Company Code" groupName="Group1" visibleInFilterBar="true">
+                <fb:control>
+                    <MultiInput id="companyCodeInput" showValueHelp="true" valueHelpRequest="oncompanyCodeValueHelp" tokenUpdate="oncompanyCodeChange"/>
+                </fb:control>
+             </fb:FilterGroupItem>
+            <fb:FilterGroupItem id="benefitsTypeFilter" name="Benefits Type" label="Benefits Type" groupName="Group1" visibleInFilterBar="true">
+                <fb:control>
+                    <MultiInput id="benefitsTypeFilterInput" showValueHelp="true" valueHelpRequest="onbenefitsTypeFilterValueHelp" tokenUpdate="onbenefitsTypeFilterInputChange"/>
+                </fb:control>
+            </fb:FilterGroupItem>
+            <fb:FilterGroupItem id="subBenefitsTypeFilter" name="Benefits Sub Type" label="Benefits Sub Type/Pay Component" groupName="Group1" visibleInFilterBar="true">
+                <fb:control>
+                    <MultiInput id="subBenefitsTypeFilterInput" showValueHelp="true" valueHelpRequest="onsubBenefitsTypeFilterValueHelp" tokenUpdate="onsubBenefitsTypeFilterInputChange"/>
+                </fb:control>
+            </fb:FilterGroupItem>
+            <!-- <fb:FilterGroupItem id="costCenterFilter" name="Cost Center" label="Cost Center" groupName="Group1" visibleInFilterBar="true">
+                <fb:control>
+                    <MultiInput id="costCenterInput" showValueHelp="true" valueHelpRequest="onCostCenterValueHelp" tokenUpdate="onCostCenterChange"/>
+                </fb:control>
+            </fb:FilterGroupItem> -->
+        </fb:filterGroupItems>
+        </fb:FilterBar>
+              
+        <OverflowToolbar id="overflowToolbarId">
+            <ToolbarSpacer id="toolbarSpacerId"/>
+            <Button id="downloadId1" icon="sap-icon://download" text="Download" press="onDownloadPress" ></Button>
+           
+        </OverflowToolbar>
+         <dependents>
+        
+                <columnmenu:Menu id="menu" beforeOpen="beforeOpenColumnMenu">
+                 
+                         <columnmenu:items>
+                        <columnmenu:ActionItem id="HeaderId" icon="sap-icon://table-column" label="Columns" press="onColumnHeaderItemPress"/>
+                         </columnmenu:items>
+                </columnmenu:Menu>
+            </dependents>
+        <content>
+            <Panel id="mainPanelId">
+                <ScrollContainer id="mainScrollContainerId"
+                    horizontal="true"
+                    width="100%"
+                    vertical="true"
+                    focusable="true"
+                    >
+                    <Table id="newTableId" 
+                        inset="false" 
+                        sticky="ColumnHeaders"
+                        alternateRowColors="true"
+                        noDataText="Please click 'Go' to load Data"
+                        width="290rem"
+                        growing="true"
+                        growingThreshold="20"
+                        fixedLayout="false"
+                        items="{path: 'ClaimsList>/', templateShareable: false}"
+                        backgroundDesign="Transparent"
+                        headerText="Claims Table"
+                        enableBusyIndicator="true"
+                        showNoData="true"
+                        updateFinished="handleUpdateFinished"
+                        growingScrollToLoad="true">
+                        <columns>
+                            <Column id="empIdCol" visible="true">
+                                <Text id="empIdText" text="Employee ID" />
+                            </Column>
+                            <Column id="empNameCol" visible="true">
+                                <Text id="empNameText" text="Employee name" />
+                            </Column>
+                            <Column id="companyDescCol" visible="true">
+                                <Text id="companyDescText" text="Company" />
+                            </Column>
+                            <!-- <Column id="costCenterCol" visible="true">
+                                <Text id="costCenterText" text="Cost center" />
+                            </Column> -->
+                            <Column id="benefitTypesCol" visible="true">
+                                <Text id="benefitTypesText" text="Benefit Types" />
+                            </Column>
+                            <Column id="subbenefitTypesCol" visible="true">
+                                <Text id="subbenefitTypesText" text="Benefits Sub Type" />
+                            </Column>
+                            <Column id="codeCol" visible="{showHideColumnsVisibility>/codeCol}">
+                                <Text id="codeText" text="Code" />
+                            </Column>
+                             <Column id="JobTitleCol" visible="{showHideColumnsVisibility>/codeCol}">
+                                <Text id="JobTitle" text="Job Title" />
+                            </Column>
+                             <Column id="FunctionCol" visible="{showHideColumnsVisibility>/codeCol}">
+                                <Text id="Functionid" text="Function" />
+                            </Column>
+                             <Column id="DepartmentCol" visible="{showHideColumnsVisibility>/codeCol}">
+                                <Text id="Departmentid" text="Department" />
+                            </Column>
+                             <Column id="DivisionCol" visible="{showHideColumnsVisibility>/codeCol}">
+                                <Text id="Divisionid" text="Division" />
+                            </Column>
+                             <Column id="LocationGroupCol" visible="{showHideColumnsVisibility>/codeCol}">
+                                <Text id="LocationGroupid" text="Location Group" />
+                            </Column>
+
+
+                            <Column id="fromDateCol" visible="false">
+                                <Text id="fromDateText" text="From Date" />
+                            </Column>
+                            <Column id="endDateCol" visible="false">
+                                <Text id="endDateText" text="End Date" />
+                            </Column>
+                            <Column id="purposeCol" visible="false">
+                                <Text id="purposeText" text="Purpose" />
+                            </Column>
+                            <Column id="institutionCol" visible="false">
+                                <Text id="institutionText" text="Institution" />
+                            </Column>
+                            <Column id="locationCol" visible="false">
+                                <Text id="locationText" text="Location" />
+                            </Column>
+                            <Column id="justificationCol" visible="false">
+                                <Text id="justificationText" text="Justification" />
+                            </Column>
+                            <Column id="visaCol" visible="false">
+                                <Text id="visaText" text="Visa" />
+                            </Column>
+                            <Column id="nationalityCol" visible="false">
+                                <Text id="nationalityText" text="Nationality" />
+                            </Column>
+                            <Column id="academicYearCol" visible="false">
+                                <Text id="academicYearText" text="Academic Year" />
+                            </Column>
+                            <Column id="reasonForTravelCol" visible="false">
+                                <Text id="reasonForTravelText" text="Reason for Travel" />
+                            </Column>
+                            <Column id="destinationCol" visible="false">
+                                <Text id="destinationText" text="Destination" />
+                            </Column>
+                            <Column id="totalNumberOfTimesCol" visible="false">
+                                <Text id="totalNumberOfTimesText" text="Total Number Of Times To Claim" />
+                            </Column>
+                            <Column id="remainingTimesCol" visible="false">
+                                <Text id="remainingTimesText" text="Remaining Times To Claim" />
+                            </Column>
+                            <Column id="claimDateCol" visible="{showHideColumnsVisibility>/claimDateCol}">
+                                <Text id="claimDateText" text="Claim Date" />
+                            </Column>
+                            <Column id="billReceiptNumCol" visible="{showHideColumnsVisibility>/billReceiptNumCol}">
+                                <Text id="billReceiptNumText" text="Bill/Receipt Number" />
+                            </Column>
+                            <Column id="descriptionCol" visible="{showHideColumnsVisibility>/descriptionCol}">
+                                <Text id="descriptionText" text="Description" />
+                            </Column>
+                            <Column id="costElementCol" visible="{showHideColumnsVisibility>/costElementCol}">
+                                <Text id="costElementText" text="Cost Element" />
+                            </Column>
+                            <Column id="valueCol" visible="{showHideColumnsVisibility>/valueCol}">
+                                <Text id="valueText" text="Value" />
+                            </Column>
+                            <Column id="amountCol" visible="{showHideColumnsVisibility>/amountCol}">
+                                <Text id="amountText" text="Amount" />
+                            </Column>
+                            <Column id="passengerCol" visible="{showHideColumnsVisibility>/passengerCol}">
+                                <Text id="passengerText" text="Passenger" />
+                            </Column>
+                            <Column id="typeCol" visible="{showHideColumnsVisibility>/typeCol}">
+                                <Text id="typeText" text="Type" />
+                            </Column>
+                            <Column id="academicStartCol" visible="{showHideColumnsVisibility>/academicStartCol}">
+                                <Text id="academicStartId" text="Academic start date" />
+                            </Column>
+                            <Column id="academicEndCol" visible="{showHideColumnsVisibility>/academicEndCol}">
+                                <Text id="academicenddateId" text="Academic end date" />
+                            </Column>
+                            <Column id="ageOfChildId" visible="{showHideColumnsVisibility>/ageOfChildId}">
+                                <Text id="ageofChildId" text="Age of Child" />
+                            </Column>
+                            <Column id="payStartDateCol" visible="{showHideColumnsVisibility>/payStartDateCol}">
+                                <Text id="payStartDateId" text="Payment start Date" />
+                            </Column>
+                            <Column id="payEndDateCol" visible="{showHideColumnsVisibility>/payEndDateCol}">
+                                <Text id="payEndDateId" text="Payment End Date" />
+                            </Column>
+                            <Column id="nameChildCol" visible="{showHideColumnsVisibility>/nameChildCol}">
+                                <Text id="nameChildId" text="Name of Child" />
+                            </Column>
+                            <Column id="gradeChildCol" visible="{showHideColumnsVisibility>/gradeChildCol}">
+                                <Text id="gradeChildId" text="Grade/Year of Child" />
+                            </Column>
+                            <Column id="schoolLocCol" visible="{showHideColumnsVisibility>/schoolLocCol}">
+                                <Text id="schoolLocId" text="Location Of School" />
+                            </Column>
+                            <Column id="schoolNameCol" visible="{showHideColumnsVisibility>/schoolNameCol}">
+                                <Text id="schoolNameId" text="Name of School" />
+                            </Column>
+                            <Column id="termClaimCol" visible="{showHideColumnsVisibility>/termClaimCol}">
+                                <Text id="termClaimId" text="Term of Claim" />
+                            </Column>
+                             <Column id="attachmentCol" visible="true">
+                                <Text id="AttachmentId" text="Attachment" />
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem id="newTableListId">
+                                <cells>
+                                    <Text id="empIdVal" text="{ClaimsList>workerId}" wrapping="true" />
+                                    <Text id="empNameVal" text="{ClaimsList>EmployeeName}" wrapping="true" />
+                                    <Text id="companyDescVal" text="{ClaimsList>CompanyDesc}" wrapping="true" />
+                                    <!-- <Text id="costCenterVal" text="{ClaimsList>CostCenter}" wrapping="true" /> -->
+                                    <Text id="benefitTypesVal" text="{ClaimsList>BenefitType}" wrapping="true" />
+                                    <Text id="subbenefitTypesVal" text="{ClaimsList>Benefitsubtype}" wrapping="true" />
+                                    <Text id="codeVal" text="{ClaimsList>Code}" wrapping="true" />
+                                    <Text id="jobTitleVal" text="{ClaimsList>JobTitle}" wrapping="true" />
+                                    <Text id="functionVal" text="{ClaimsList>Function}" wrapping="true" />
+                                    <Text id="departmentVal" text="{ClaimsList>Department}" wrapping="true" />
+                                    <Text id="divisionVal" text="{ClaimsList>Division}" wrapping="true" />
+                                    <Text id="locationGroupVal" text="{ClaimsList>LocationGroup}" wrapping="true" />
+                                    <Text id="fromDateVal" text="{ClaimsList>FromDate}" wrapping="true" />
+                                    <Text id="endDateVal" text="{ClaimsList>EndDate}" wrapping="true" />
+                                    <Text id="purposeVal" text="{ClaimsList>Purpose}" wrapping="true" />
+                                    <Text id="institutionVal" text="{ClaimsList>Institution}" wrapping="true" />
+                                    <Text id="locationVal" text="{ClaimsList>Location}" wrapping="true" />
+                                    <Text id="justificationVal" text="{ClaimsList>Justification}" wrapping="true" />
+                                    <Text id="visaVal" text="{ClaimsList>Visa}" wrapping="true" />
+                                    <Text id="nationalityVal" text="{ClaimsList>Nationality}" wrapping="true" />
+                                    <Text id="academicYearVal" text="{ClaimsList>AcademicYear}" wrapping="true" />
+                                    <Text id="reasonForTravelVal" text="{ClaimsList>ReasonForTravel}" wrapping="true" />
+                                    <Text id="destinationVal" text="{ClaimsList>Destination}" wrapping="true" />
+                                    <Text id="totalNumberOfTimesVal" text="{ClaimsList>TotalNumberOfTimesToClaim}" wrapping="true" />
+                                    <Text id="remainingTimesVal" text="{ClaimsList>RemainingTimesToClaim}" wrapping="true" />
+                                    <Text id="claimDateVal" text="{ClaimsList>ClaimDate}" wrapping="true" />
+                                    <Text id="billReceiptNumVal" text="{ClaimsList>BillReceiptNumber}" wrapping="true" />
+                                    <Text id="descriptionVal" text="{ClaimsList>Description}" wrapping="true" />
+                                    <Text id="costElementVal" text="{ClaimsList>CostElement}" wrapping="true" />
+                                    <Text id="valueVal" text="{ClaimsList>Value}" wrapping="true" />
+                                    <Text id="amountVal" text="{ClaimsList>Amount}" wrapping="true" />
+                                    <Text id="passengerVal" text="{ClaimsList>Passenger}" wrapping="true" />
+                                    <Text id="typeVal" text="{ClaimsList>Type}" wrapping="true" />
+                                    <Text id="academicStartVal" text="{ClaimsList>AcademicStartDate}" wrapping="true" />
+                                    <Text id="academicEndVal" text="{ClaimsList>AcademicEndDate}" wrapping="true" />
+                                    <Text id="childAgeVal" text="{ClaimsList>ChildAge}" wrapping="true" />
+                                    <Text id="paymentStartVal" text="{ClaimsList>PaymentStartDate}" wrapping="true" />
+                                    <Text id="paymentEndVal" text="{ClaimsList>PaymentEndDate}" wrapping="true" />
+                                    <Text id="childNameVal" text="{ClaimsList>ChildName}" wrapping="true" />
+                                    <Text id="childGradeVal" text="{ClaimsList>ChildGrade}" wrapping="true" />
+                                    <Text id="schoolLocVal" text="{ClaimsList>SchoolLocation}" wrapping="true" />
+                                    <Text id="schoolNameVal" text="{ClaimsList>SchoolName}" wrapping="true" />
+                                    <Text id="claimTermVal" text="{ClaimsList>ClaimTerm}" wrapping="true" />
+                                    <!-- <u:FileUploader id="fileUploaderVal" name="myFileUpload"  tooltip="Upload your file to the local server"  change="onFileUploaderChange" buttonOnly="true" /> -->
+                                     <Button id="button1"  icon="sap-icon://download" press="handleDownloadpress" enabled="{= ${ClaimsList>Attachment} !== undefined ? true : false }"/>
+
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </ScrollContainer>
+            </Panel>
+        </content>
+    </Page>
+</mvc:View>

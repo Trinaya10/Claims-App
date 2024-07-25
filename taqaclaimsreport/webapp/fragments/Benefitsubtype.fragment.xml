@@ -1,0 +1,20 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <SelectDialog id="subBenefitsTypeFilterValueHelpDialog"
+                  noDataText="No Benefits Sub Types Found"
+                  title="Select Benefits Sub Type"
+                  confirm="onSubBenefitsTypeFilterValueHelpOkPress"
+                  multiSelect="true"
+                  showClearButton="true"
+                  rememberSelections="true"
+                  items="{path: 'BenefitSubTypeList>/'}"
+                  search="onSubBenefitsTypeFilterSearch"
+                  cancel="onValueHelpCancelPress">
+        
+        <StandardListItem id="subBenefitsTypeStandardListId"
+                          title="{BenefitSubTypeList>code}"
+                          description="{BenefitSubTypeList>description}"
+                          type="Active" />
+        
+    </SelectDialog>
+</core:FragmentDefinition>
+

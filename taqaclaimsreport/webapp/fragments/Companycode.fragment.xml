@@ -1,0 +1,19 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <SelectDialog id="companyCodeValueHelpDialog"
+                  
+                  title="Select Company Code"
+                  confirm="onCompanyCodeValueHelpOkPress"
+                  multiSelect="true"
+                  rememberSelections="true"
+                  showClearButton="true"
+                  items="{path: 'CompanyCodeList>/'}"
+                  search="onCompanyCodeSearch"
+                  cancel="onValueHelpCancelPress">
+        
+        <StandardListItem id="companyCodeStandardListId"
+                          title="{CompanyCodeList>code}"
+                          description="{CompanyCodeList>description}"
+                          type="Active" />
+        
+    </SelectDialog>
+</core:FragmentDefinition>

@@ -1,0 +1,19 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <SelectDialog id="employeeIdValueHelpDialog"
+                  noDataText="No Employee Id's Found"
+                  title="Select Employee ID"
+                  confirm="onEmployeeIdValueHelpOkPress"
+                  multiSelect="true"
+                  rememberSelections="true"
+                  showClearButton="true"
+                  items="{path: 'EmployeeIdList>/'}"
+                  search="onEmployeeIdSearch"
+                  cancel="onValueHelpCancelPress">
+        
+        <StandardListItem id="employeeIdStandardListId"
+                          title="{EmployeeIdList>id}"
+                          description="{EmployeeIdList>name}"
+                          type="Active" />
+        
+    </SelectDialog>
+</core:FragmentDefinition>

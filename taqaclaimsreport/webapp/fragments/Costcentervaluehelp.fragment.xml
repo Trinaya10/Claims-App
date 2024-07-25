@@ -1,0 +1,18 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <SelectDialog id="costCenterValueHelpDialog"
+                  noDataText="No Cost Centers Found"
+                  title="Select Cost Center"
+                  confirm="onCostCenterValueHelpOkPress"
+                  multiSelect="true"
+                  rememberSelections="true"
+                  showClearButton="true"
+                  items="{path: 'CostCenters>/'}"
+                  search="onCostCenterSearch"
+                  cancel="onValueHelpCancelPress">
+        
+        <StandardListItem id="costCenterStandardListId"
+                          title="{CostCenters>costCenter}"
+                          type="Active" />
+        
+    </SelectDialog>
+</core:FragmentDefinition>

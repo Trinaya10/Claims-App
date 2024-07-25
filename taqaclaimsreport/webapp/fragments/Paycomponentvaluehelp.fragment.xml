@@ -1,0 +1,18 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <SelectDialog id="payComponentValueHelpDialog"
+                  noDataText="No Pay Components Found"
+                  title="Select Pay Component"
+                  confirm="onPayComponentValueHelpOkPress"
+                  multiSelect="true"
+                  rememberSelections="true"
+                  showClearButton="true"
+                  items="{path: 'PayComponents>/'}"
+                  search="onPayComponentSearch"
+                  cancel="onValueHelpCancelPress">
+        
+        <StandardListItem id="payComponentStandardListId"
+                          title="{PayComponents>payComponent}"
+                          type="Active" />
+        
+    </SelectDialog>
+</core:FragmentDefinition>
