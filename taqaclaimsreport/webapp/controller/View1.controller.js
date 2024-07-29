@@ -73,13 +73,17 @@ function (Controller, BaseController, Filter, FilterOperator, JSONModel, Fragmen
             empDetailsList = await this.ReadOdata(oSFModel, '/EmpJob', EmpJobFilter);
             empDetailsList = empDetailsList.results;
 
-            let userIdFilter = this.EmployeeIdList.map(record => new Filter("workerId", FilterOperator.EQ, record.id));
-            var benefitEmpClaimsFilter = [new Filter(userIdFilter)]; //39417
-            claimsDetails = await this.ReadOdata(oSFModel, '/BenefitEmployeeClaim', benefitEmpClaimsFilter, 
-                {$expand: "workerIdNav, cust_benGeneralESR/cust_AttachmentNav, cust_benAirTicket/cust_AttachmentNav, cust_benClientEntertainment/cust_AttachmentNav, cust_benUnifiedID_VisaReimbursement/cust_AttachmentNav, cust_benVisaMedicalCostReimbursement/cust_AttachmentNav, cust_medicalSubClaim/cust_AttachmentNav, cust_benFullTuitionAssistance/cust_AttachmentNav"});
-            claimsDetails = claimsDetails.results;
-            this.createBenefitClaimList();
-
+            try{
+                var userIdFilter = this.EmployeeIdList.map(record => new Filter("workerId", FilterOperator.EQ, record.id));
+                var benefitEmpClaimsFilter = [new Filter(userIdFilter)]; //39417
+                claimsDetails = await this.ReadOdata(oSFModel, '/BenefitEmployeeClaim', benefitEmpClaimsFilter, 
+                    {$expand: "workerIdNav, cust_benGeneralESR/cust_AttachmentNav, cust_benAirticket/cust_AttachmentNav, cust_benClientEntertainment/cust_AttachmentNav, cust_benUnifiedID_VisaReimbursement/cust_AttachmentNav, cust_benVisaMedicalCostReimbursement/cust_AttachmentNav, cust_medicalSubClaim/cust_AttachmentNav, cust_benFullTuitionAssistance/cust_AttachmentNav"});
+                claimsDetails = claimsDetails.results;
+                this.createBenefitClaimList();
+            }
+            catch(err){
+                console.log(err);
+            }
             oBusyDialog.close();
         },
 
@@ -163,8 +167,8 @@ function (Controller, BaseController, Filter, FilterOperator, JSONModel, Fragmen
                 });
             }
             else if (claimItem.benefit === "AT1001") {
-                if(claimItem.cust_benAirTicket && Array.isArray(claimItem.cust_benAirTicket.results) && claimItem.cust_benAirTicket.results[0]){
-                    claimResult = claimItem.cust_benAirTicket.results[0];
+                if(claimItem.cust_benAirticket && Array.isArray(claimItem.cust_benAirticket.results) && claimItem.cust_benAirticket.results[0]){
+                    claimResult = claimItem.cust_benAirticket.results[0];
                 }
                 this.airTicketColumnsIds.forEach((item) => {
                     this.showHideColumnsVisibility[item] = true
