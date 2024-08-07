@@ -139,6 +139,7 @@ sap.ui.define([
           },
 
         showHideColumnsVisibility: {
+            
             claimDateCol: false,
             codeCol: false,
             billReceiptNumCol: false,
@@ -325,10 +326,7 @@ sap.ui.define([
             { code: "5098", description: "School Pre Payment" },
             { code: "8203", description: "Visa Medical Cost Reimbur" }
         ],
-        
-        
 
-        
             "companyCode": [
               { code: "2010", description: "AlMansoori Petroleum Services LLC, UAE" },
               { code: "2020", description: "AlMansoori Production Service LLC, UAE" },
@@ -356,19 +354,18 @@ sap.ui.define([
               { code: "3360", description: "AlMansoori Petroleum Services" },
               { code: "4010", description: "Geothermal KSA " }
             ],
-          
-          
 
         EmployeeIdList: [
-            { id: "56", name: "kwt f2 test" },
-            { id: "60", name: "kwt f2 test" },
-            { id: "62", name: "kwt f2 test" },
+            { id: "56", name: "UAE Test1_2100" },
+            { id: "60", name: "UAE Test1_2300" },
+            { id: "62", name: "UAE Test1_2400" },
             {id: "39359", name: "kwt f2 test" },
-            { id: "39417", name: "kwt f2 test" },
+            { id: "39417", name: "UAE TEST SWT" },
             {id: "39333", name: "kwt f2 test" }
 
         ]
         
           
     });
+   
 });

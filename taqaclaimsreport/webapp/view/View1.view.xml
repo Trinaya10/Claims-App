@@ -70,16 +70,16 @@
                         sticky="ColumnHeaders"
                         alternateRowColors="true"
                         noDataText="Please click 'Go' to load Data"
-                        width="220rem"
+                        width="240rem"
                         growing="true"
-                        growingThreshold="20"
+                       
                         fixedLayout="false"
                         items="{path: 'ClaimsList>/', templateShareable: false}"
                         backgroundDesign="Transparent"
                         headerText="Claims Table"
                         enableBusyIndicator="true"
                         showNoData="true"
-                        updateFinished="handleUpdateFinished"
+                        updateFinished="updateFinished"
                         growingScrollToLoad="true">
                         <columns>
                             <Column id="empIdCol" visible="true">
@@ -88,12 +88,15 @@
                             <Column id="empNameCol" visible="true">
                                 <Text id="empNameText" text="Employee name" />
                             </Column>
-                            <Column id="companyDescCol" visible="true">
-                                <Text id="companyDescText" text="Company" />
+                            <Column id="companyNameCol" visible="true">
+                                <Text id="companyNameText" text="Company Code" />
                             </Column>
-                            <!-- <Column id="costCenterCol" visible="true">
+                            <Column id="companyDescCol" visible="true">
+                                <Text id="companyDescText" text="Company Description" />
+                            </Column>
+                            <Column id="costCenterCol" visible="true">
                                 <Text id="costCenterText" text="Cost center" />
-                            </Column> -->
+                            </Column>
                             <Column id="benefitTypesCol" visible="true">
                                 <Text id="benefitTypesText" text="Benefit Types" />
                             </Column>
@@ -222,8 +225,9 @@
                                 <cells>
                                     <Text id="empIdVal" text="{ClaimsList>workerId}" wrapping="true" />
                                     <Text id="empNameVal" text="{ClaimsList>EmployeeName}" wrapping="true" />
+                                    <Text id="companyNameVal" text="{ClaimsList>CompanyCode}" wrapping="true" />
                                     <Text id="companyDescVal" text="{ClaimsList>CompanyDesc}" wrapping="true" />
-                                    <!-- <Text id="costCenterVal" text="{ClaimsList>CostCenter}" wrapping="true" /> -->
+                                    <Text id="costCenterVal" text="{ClaimsList>CostCenter}" wrapping="true" />
                                     <Text id="benefitTypesVal" text="{ClaimsList>BenefitType}" wrapping="true" />
                                     <Text id="subbenefitTypesVal" text="{ClaimsList>Benefitsubtype}" wrapping="true" />
                                     <Text id="codeVal" text="{ClaimsList>Code}" wrapping="true" />

@@ -70,14 +70,14 @@ function (Controller, BaseController, Filter, FilterOperator, JSONModel, Fragmen
 
             let userIdEmpFilter = this.EmployeeIdList.map(record => new Filter("userId", FilterOperator.EQ, record.id));
             let EmpJobFilter = [new Filter(userIdEmpFilter)]; //39417
-            empDetailsList = await this.ReadOdata(oSFModel, '/EmpJob', EmpJobFilter);
+            empDetailsList = await this.ReadOdata(oSFModel, '/EmpJob', EmpJobFilter, {$expand: "companyNav"});
             empDetailsList = empDetailsList.results;
 
             try{
                 var userIdFilter = this.EmployeeIdList.map(record => new Filter("workerId", FilterOperator.EQ, record.id));
                 var benefitEmpClaimsFilter = [new Filter(userIdFilter)]; //39417
                 claimsDetails = await this.ReadOdata(oSFModel, '/BenefitEmployeeClaim', benefitEmpClaimsFilter, 
-                    {$expand: "workerIdNav, cust_benGeneralESR/cust_AttachmentNav, cust_benAirticket/cust_AttachmentNav, cust_benClientEntertainment/cust_AttachmentNav, cust_benUnifiedID_VisaReimbursement/cust_AttachmentNav, cust_benVisaMedicalCostReimbursement/cust_AttachmentNav, cust_medicalSubClaim/cust_AttachmentNav, cust_benFullTuitionAssistance/cust_AttachmentNav"});
+                    {$expand: "workerIdNav, cust_benGeneralESR/cust_AttachmentNav, cust_benAirticket/cust_AttachmentNav, cust_benClientEntertainment/cust_AttachmentNav, cust_benUnifiedID_VisaReimbursement/cust_AttachmentNav, cust_benVisaMedicalCostReimbursement/cust_AttachmentNav, cust_medicalSubClaim/cust_AttachmentNav, cust_benEducationMonthly/cust_AttachmentNav, cust_benPreEmploymentMedical/cust_AttachmentNav"});
                 claimsDetails = claimsDetails.results;
                 this.createBenefitClaimList();
             }
@@ -92,11 +92,11 @@ function (Controller, BaseController, Filter, FilterOperator, JSONModel, Fragmen
             claimsDetails.forEach((claimItem) => {
                 let empDetail = empDetailsList.find(emp => emp.userId == claimItem.workerId);
                 var claimDetail = {
-                    "workerId": claimItem.workerId,
+                    "workerId": claimItem.workerId ,
                     "EmployeeName": claimItem.workerIdNav && claimItem.workerIdNav.displayName,
-                    "CompanyCode": claimItem.workerIdNav && claimItem.workerIdNav.custom01,
-                    "CompanyDesc": claimItem.workerIdNav && claimItem.workerIdNav.custom01,
-                    "CostCenter": "empData.costCenter",
+                    "CompanyCode": empDetail.company,
+                    "CompanyDesc": empDetail.companyNav && empDetail.companyNav.name_defaultValue,
+                    "CostCenter": empDetail.costCenter,
                     "BenefitType": claimItem.benefit,
                     "JobTitle": empDetail.jobTitle,
                     "Function": empDetail.businessUnit,
@@ -120,8 +120,8 @@ function (Controller, BaseController, Filter, FilterOperator, JSONModel, Fragmen
                 console.log("From Date", claimItem.cust_FromDate)
                 console.log("End Date",claimItem.cust_EndDate)
                 console.log("Job Title ", empDetail.jobTitle)
+                console.log("Employee Name", claimItem.workerId)
                 let claimResult = this.getBenefitTypeColumnsAndValues(claimItem);
-                ;
                 claimDetail = {
                     ...claimDetail,
                     "Benefitsubtype": claimResult.cust_code,
@@ -129,7 +129,7 @@ function (Controller, BaseController, Filter, FilterOperator, JSONModel, Fragmen
                     "ClaimDate": claimResult.cust_claimDate && this.formatDateS(claimResult.cust_claimDate),
                     "Code": claimResult.cust_code,
                     "BillReceiptNumber": claimResult.cust_billReceiptNumber,
-                    "Description": claimResult.cust_Description,
+                    "Description": claimResult.cust_description,
                     "CostElement": claimResult.cust_costElement,
                     "Value": claimResult.cust_value, //not found in data
                     "Amount": claimResult.cust_amount,
@@ -150,9 +150,12 @@ function (Controller, BaseController, Filter, FilterOperator, JSONModel, Fragmen
                     "BenefitSubType": claimResult.cust_AttachmentNav?.cust_code
                 }
                 claimList.push(claimDetail);
-                console.log("Claim Date1",claimResult.cust_claimDate )
+               
+                // console.log("Claim Date1",claimResult.cust_claimDate )
             });
             this.getView().getModel('ClaimsList').setData(claimList);
+            // this.getView().getModel('EmployeeIdList').setData(claimList);
+
             this.getView().getModel('showHideColumnsVisibility').refresh();
         },
 
@@ -161,6 +164,7 @@ function (Controller, BaseController, Filter, FilterOperator, JSONModel, Fragmen
             if (claimItem.benefit === "GESR1001") {
                 if(claimItem.cust_benGeneralESR && Array.isArray(claimItem.cust_benGeneralESR.results) && claimItem.cust_benGeneralESR.results[0]){
                     claimResult = claimItem.cust_benGeneralESR.results[0];
+                    console.log("General ESR",claimResult )
                 }
                 this.generalESRColumnsIds.forEach((item)=>{
                     this.showHideColumnsVisibility[item] = true
@@ -183,24 +187,24 @@ function (Controller, BaseController, Filter, FilterOperator, JSONModel, Fragmen
                 });
             }
             else if (claimItem.benefit === "FTA1001") {
-                if(claimItem.cust_benFullTuitionAssistance && Array.isArray(claimItem.cust_benFullTuitionAssistance.results) && claimItem.cust_benFullTuitionAssistance.results[0]){
-                claimResult = claimItem.cust_benFullTuitionAssistance.results[0];
+                if(claimItem.cust_benfulltutionassistance && Array.isArray(claimItem.cust_benfulltutionassistance.results) && claimItem.cust_benfulltutionassistance.results[0]){
+                claimResult = claimItem.cust_benfulltutionassistance.results[0];
                 }
                 this.fullTutionColumnsIds.forEach((item) => {
                     this.showHideColumnsVisibility[item] = true
                 });
             }
             else if (claimItem.benefit === "ED1001") {
-                if(claimItem.cust_benEductaionMonthly && Array.isArray(claimItem.cust_benEductaionMonthly.results) && claimItem.cust_benEductaionMonthly.results[0]) {
-                    claimResult = claimItem.cust_benEductaionMonthly.results[0];
+                if(claimItem.cust_benEducationMonthly && Array.isArray(claimItem.cust_benEducationMonthly.results) && claimItem.cust_benEducationMonthly.results[0]) {
+                    claimResult = claimItem.cust_benEducationMonthly.results[0];
                 }
                 this.educationMonthlyColumnsIds.forEach((item) => {
                     this.showHideColumnsVisibility[item] = true
                 });
             }
             else if (claimItem.benefit === "CE1001") {
-                if(claimItem.cust_benFullTuitionAssistance && Array.isArray(claimItem.cust_benFullTuitionAssistance.results) && claimItem.cust_benFullTuitionAssistance.results[0]){
-                    claimResult = claimItem.cust_benFullTuitionAssistance.results[0];
+                if(claimItem.cust_benClientEntertainment && Array.isArray(claimItem.cust_benClientEntertainment.results) && claimItem.cust_benClientEntertainment.results[0]){
+                    claimResult = claimItem.cust_benClientEntertainment.results[0];
                 }
                 this.clientEntertainmentColumnsIds.forEach((item) => {
                     this.showHideColumnsVisibility[item] = true
@@ -508,9 +512,9 @@ function (Controller, BaseController, Filter, FilterOperator, JSONModel, Fragmen
 
         onSearch: function () {
             var that = this;
-            this.setColumnsVisibility(true);
+            that.setColumnsVisibility(true);
             // Ensure oFilterBar and oTableView1 are available
-            if (!this.oFilterBar || !this.oTableView1) {
+            if (!that.oFilterBar || !that.oTableView1) {
                 console.error("FilterBar or TableView is not initialized.");
                 return;
             }
@@ -525,7 +529,7 @@ function (Controller, BaseController, Filter, FilterOperator, JSONModel, Fragmen
                 aTableFilters.push(new Filter("ClaimDate", FilterOperator.BT, this.formatDateS(new Date(startDate)), this.formatDateS(new Date(endDate))));
             }
 
-            var employeeIdFilterSelected = oView.byId("employeeIdInput").getTokens().map(function (token) {
+            var employeeIdFilterSelected = this.getView().byId("employeeIdInput").getTokens().map(function (token) {
                 return token.getText();
             });
             if(employeeIdFilterSelected && employeeIdFilterSelected.length){
@@ -589,7 +593,7 @@ function (Controller, BaseController, Filter, FilterOperator, JSONModel, Fragmen
             var oTableBinding = oTableView1.getBinding("items");
             console.log("Table Binding",oTableBinding)
             oTableBinding.filter(aTableFilters);
-            oTableView1.setShowOverlay(false);
+            // oTableView1.setShowOverlay(false);
         },
         onReset: function(oEvent) {
             // Reset filter values
@@ -698,7 +702,6 @@ function (Controller, BaseController, Filter, FilterOperator, JSONModel, Fragmen
                 { label: 'Benefit Types', property: 'Benefit Types', type: 'string' },
                 { label: 'Benefits Sub Type', property: 'Benefits Sub Type', type: 'string' },
 
-                // Todo : Trinaya, add new columns here
                 { label: 'JobTitle', property: 'JobTitle', type: 'string' },
                 { label: 'Function', property: 'Function', type: 'string' },
                 { label: 'Department', property: 'Department', type: 'string' },
